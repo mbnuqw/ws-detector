@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "WebSocket Detector",
+  "version": "1.0.0",
+
+  "description": "Detects websocket connection.",
+  "homepage_url": "<<<<<<<<<<<<<<<<<<",
+  "icons": {
+    "48": "./assets/icons/ws-48.png",
+    "96": "./assets/icons/ws-96.png"
+  },
+  "permissions": ["webRequest", "<all_urls>"],
+
+  "page_action": {
+    "browser_style": true,
+    "default_icon": {
+      "19": "./assets/icons/ws-16_logo.png",
+      "38": "./assets/icons/ws-32_logo.png"
+    },
+    "default_title": "WebSocket Detected"
+  },
+
+  "background": {
+    "scripts": ["background/main.js"]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "ws-detector",
+  "version": "1.0.0",
+  "description": "WebExtension for detecting websocket connection.",
+  "scripts": {
+    "dev": "./node_modules/.bin/web-ext run",
+    "pack":
+      "./node_modules/.bin/web-ext build -a ./dist -i *.sublime-* *.lock ./package.json",
+    "lint": "./node_modules/.bin/web-ext lint"
+  },
+  "main": "background/main.js",
+  "author": "<maxbadryzlov@gmail.com>",
+  "license": "MPL",
+  "dependencies": {
+    "web-ext": "^2.0.0"
+  }
+}
