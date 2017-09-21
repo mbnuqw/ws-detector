@@ -4,7 +4,7 @@
   "version": "1.0.0",
 
   "description": "Detects websocket connection.",
-  "homepage_url": "<<<<<<<<<<<<<<<<<<",
+  "homepage_url": "https://github.com/mbnuqw/ws-detector",
   "icons": {
     "48": "./assets/icons/ws-48.png",
     "96": "./assets/icons/ws-96.png"
