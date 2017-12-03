@@ -9,15 +9,14 @@
     "48": "./assets/icons/ws-48.png",
     "96": "./assets/icons/ws-96.png"
   },
-  "permissions": ["webRequest", "<all_urls>"],
+  "permissions": ["webRequest", "tabs", "<all_urls>"],
 
   "page_action": {
-    "browser_style": true,
     "default_icon": {
-      "19": "./assets/icons/ws-16_logo.png",
-      "38": "./assets/icons/ws-32_logo.png"
+      "19": "./assets/icons/ws-16_logo_inact.png",
+      "38": "./assets/icons/ws-32_logo_inact.png"
     },
-    "default_title": "WebSocket Detected"
+    "default_title": "WebSocket not detected"
   },
 
   "background": {
