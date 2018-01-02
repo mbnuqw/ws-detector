@@ -5,22 +5,41 @@ const UrlPathRe = /^(.+:\/(\/[^\?]+)+?)(\?)?.*$/
 *  Update pageAction: title, icon, popup
 **/
 function UpdatePageAction(tab) {
-  window.browser.pageAction.show(tab.id)
-  window.browser.pageAction.setTitle({
-    tabId: tab.id,
-    title: 'WebSocket detected',
-  })
-  window.browser.pageAction.setIcon({
-    tabId: tab.id,
-    path: {
-      '19': './assets/icons/ws-16_logo.png',
-      '38': './assets/icons/ws-32_logo.png',
-    },
-  })
-  window.browser.pageAction.setPopup({
-    tabId: tab.id,
-    popup: './assets/ws-list.html',
-  })
+  if (!tab.ws.length) {
+    window.browser.pageAction.hide(tab.id)
+    window.browser.pageAction.setTitle({
+      tabId: tab.id,
+      title: 'WebSocket not detected',
+    })
+    window.browser.pageAction.setIcon({
+      tabId: tab.id,
+      path: {
+        '19': './assets/icons/ws-16_logo_inact.png',
+        '38': './assets/icons/ws-32_logo_inact.png',
+      },
+    })
+    window.browser.pageAction.setPopup({
+      tabId: tab.id,
+      popup: '',
+    })
+  } else {
+    window.browser.pageAction.show(tab.id)
+    window.browser.pageAction.setTitle({
+      tabId: tab.id,
+      title: 'WebSocket detected',
+    })
+    window.browser.pageAction.setIcon({
+      tabId: tab.id,
+      path: {
+        '19': './assets/icons/ws-16_logo.png',
+        '38': './assets/icons/ws-32_logo.png',
+      },
+    })
+    window.browser.pageAction.setPopup({
+      tabId: tab.id,
+      popup: './assets/ws-list.html',
+    })
+  }
 }
 
 // Setup communication with popup
@@ -32,36 +51,44 @@ window.browser.runtime.onConnect.addListener(port => {
 })
 
 // Handle requests
-window.browser.webRequest.onBeforeRequest.addListener(
+window.browser.webRequest.onCompleted.addListener(
   req => {
-    if (req.type === 'websocket') {
-      let targetTab = WSTabs.find(t => t.id === req.tabId)
-      let urlPath = UrlPathRe.exec(req.url)[1]
+    if (req.type !== 'websocket' && req.type !== 'main_frame') return
 
-      if (targetTab) {
-        // Check if there is similar ws url
-        let wsUrlIndex = targetTab.ws.findIndex(
-          url => url.indexOf(urlPath) !== -1
-        )
+    let targetTab = WSTabs.find(t => t.id === req.tabId)
 
-        if (wsUrlIndex === -1)
-          // Add new ws url
-          targetTab.ws.push(req.url)
-        else
-          // Replace similar ws url to new one
-          targetTab.ws.splice(wsUrlIndex, 1, req.url)
-      } else {
-        // Create
-        targetTab = {
-          id: req.tabId,
-          originUrl: req.originUrl,
-          ws: [req.url],
-        }
-        WSTabs.push(targetTab)
-      }
-
+    // Reset ws popup for this tab
+    if (!req.documentUrl && req.parentFrameId === -1) {
+      targetTab.ws = []
       UpdatePageAction(targetTab)
+      return
     }
+
+    let urlPath = UrlPathRe.exec(req.url)[1]
+
+    if (targetTab) {
+      // Check if there is similar ws url
+      let wsUrlIndex = targetTab.ws.findIndex(
+        url => url.indexOf(urlPath) !== -1
+      )
+
+      if (wsUrlIndex === -1)
+        // Add new ws url
+        targetTab.ws.push(req.url)
+      else
+        // Replace similar ws url with new one
+        targetTab.ws.splice(wsUrlIndex, 1, req.url)
+    } else {
+      // Create
+      targetTab = {
+        id: req.tabId,
+        originUrl: req.originUrl,
+        ws: [req.url],
+      }
+      WSTabs.push(targetTab)
+    }
+
+    UpdatePageAction(targetTab)
   },
   {
     urls: ['<all_urls>'],
