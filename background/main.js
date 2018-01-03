@@ -51,9 +51,10 @@ window.browser.runtime.onConnect.addListener(port => {
 })
 
 // Handle requests
-window.browser.webRequest.onCompleted.addListener(
+window.browser.webRequest.onHeadersReceived.addListener(
   req => {
     if (req.type !== 'websocket' && req.type !== 'main_frame') return
+    console.log(`[DEBUG] >>>`, req.url)
 
     let targetTab = WSTabs.find(t => t.id === req.tabId)
 
@@ -99,14 +100,4 @@ window.browser.webRequest.onCompleted.addListener(
 window.browser.tabs.onRemoved.addListener(tabId => {
   let targetIndex = WSTabs.findIndex(t => t.id === tabId)
   if (targetIndex !== -1) WSTabs.splice(targetIndex, 1)
-})
-
-// Handle tab updates
-window.browser.tabs.onUpdated.addListener((id, info) => {
-  if (info.status !== 'complete') return
-
-  let targetTab = WSTabs.find(t => t.id === id)
-  if (!targetTab) return
-
-  if (info.url) UpdatePageAction(targetTab)
 })
