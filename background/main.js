@@ -54,12 +54,11 @@ window.browser.runtime.onConnect.addListener(port => {
 window.browser.webRequest.onHeadersReceived.addListener(
   req => {
     if (req.type !== 'websocket' && req.type !== 'main_frame') return
-    console.log(`[DEBUG] >>>`, req.url)
 
     let targetTab = WSTabs.find(t => t.id === req.tabId)
 
     // Reset ws popup for this tab
-    if (!req.documentUrl && req.parentFrameId === -1) {
+    if (targetTab && !req.documentUrl && req.parentFrameId === -1) {
       targetTab.ws = []
       UpdatePageAction(targetTab)
       return
