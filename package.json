@@ -1,17 +1,16 @@
 {
   "name": "ws-detector",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "WebExtension for detecting websocket connection.",
   "scripts": {
-    "dev": "./node_modules/.bin/web-ext run",
-    "build":
-      "./node_modules/.bin/web-ext build -a dist/ -i *.sublime-* *.lock ./package.json",
+    "dev": "web-ext run -f firefox-nightly",
+    "build": "web-ext build -a dist/ -i *.lock ./package.json",
     "lint": "./node_modules/.bin/web-ext lint"
   },
   "main": "background/main.js",
   "author": "<maxbadryzlov@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "web-ext": "^2.0.0"
+    "web-ext": "^2.9.1"
   }
 }
