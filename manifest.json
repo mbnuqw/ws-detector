@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "WebSocket Detector",
-  "version": "1.1.1",
+  "version": "1.2.2",
 
   "description": "Detects websocket connection.",
   "homepage_url": "https://github.com/mbnuqw/ws-detector",
